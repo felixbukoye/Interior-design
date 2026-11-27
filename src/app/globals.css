@@ -655,6 +655,11 @@ html.intro-active body {
   white-space: nowrap;
 }
 
+/* Panel focus rings sit on espresso, so use the gold accent. */
+.mega-panel :focus-visible {
+  outline-color: var(--color-gold);
+}
+
 /* The four service categories are followed by the featured image card.
    The wrapper stays hit-testable throughout the clipped reveal. */
 .mega-panel-wrap {
@@ -675,12 +680,44 @@ html.intro-active body {
   overflow: auto;
   overscroll-behavior: contain;
   visibility: hidden;
-  border-top: 1px solid var(--color-hairline-cream);
-  border-bottom: 1px solid var(--color-hairline-cream);
-  background: var(--color-cream);
-  color: var(--color-ink);
-  box-shadow: 0 24px 45px -22px rgba(23, 21, 19, 0.25);
+  border-top: 1px solid var(--color-hairline-dark);
+  border-bottom: 1px solid var(--color-hairline-dark);
+  /* The desktop panel shares the mobile menu's espresso treatment. */
+  background: var(--espresso-gradient);
+  color: var(--color-cream);
+  box-shadow: 0 24px 45px -22px rgba(0, 0, 0, 0.55);
   clip-path: inset(0% 0% 100% 0%);
+}
+
+/* The header keeps its espresso background while a panel is open, so the
+   two read as one surface instead of a cream bar over a dark panel. */
+.site-header[data-desktop-open="true"] {
+  background-color: var(--color-espresso);
+  border-bottom-color: var(--color-hairline-dark);
+  color: var(--color-cream);
+}
+
+.site-header[data-desktop-open="true"] .site-header__email {
+  color: var(--color-muted-on-dark);
+}
+
+.site-header[data-desktop-open="true"] .site-header__email:hover,
+.site-header[data-desktop-open="true"] .site-header__email:focus-visible {
+  color: var(--color-cream);
+}
+
+.site-header[data-desktop-open="true"] .site-header__divider {
+  background-color: var(--color-cream);
+}
+
+/* Keep the CTA legible on the dark bar, mirroring the mobile menu's gold CTA. */
+.site-header[data-desktop-open="true"] .btn--dark {
+  background-color: var(--color-gold);
+  color: var(--color-ink);
+}
+
+.site-header[data-desktop-open="true"] .btn--dark .btn__fill {
+  background-color: var(--color-gold-hover);
 }
 
 .mega-panel__inner {
@@ -701,7 +738,7 @@ html.intro-active body {
 
 .mega-label {
   margin-bottom: 23px;
-  color: var(--color-gold-text);
+  color: var(--color-gold-hover);
   font-size: 11px;
   font-weight: 600;
   letter-spacing: 0.14em;
@@ -731,7 +768,7 @@ html.intro-active body {
 
 .mega-link__title {
   position: relative;
-  color: var(--color-ink);
+  color: var(--color-cream);
   font-size: 13px;
   font-weight: 600;
   line-height: 1.38;
@@ -764,7 +801,7 @@ html.intro-active body {
 .mega-link__description {
   display: block;
   margin-top: 4px;
-  color: var(--color-muted);
+  color: var(--color-muted-on-dark);
   font-size: 12px;
   line-height: 1.5;
   transition: color 300ms ease;
@@ -772,7 +809,7 @@ html.intro-active body {
 
 .mega-link:hover .mega-link__description,
 .mega-link:focus-visible .mega-link__description {
-  color: var(--color-ink);
+  color: var(--color-cream);
 }
 
 .mega-all-link {
@@ -780,7 +817,7 @@ html.intro-active body {
   align-items: center;
   gap: 8px;
   margin-top: 25px;
-  color: var(--color-ink);
+  color: var(--color-cream);
   font-size: 12px;
   font-weight: 600;
   line-height: 1.5;
@@ -896,6 +933,7 @@ html.intro-active body {
 
 .mega-type-link {
   display: inline-block;
+  color: var(--color-cream);
   font-size: 14px;
   font-weight: 500;
   line-height: 1.4;
@@ -927,7 +965,7 @@ html.intro-active body {
   aspect-ratio: 4 / 4.5;
   overflow: hidden;
   border-radius: 4px;
-  background-color: var(--color-cream-deep);
+  background-color: var(--color-espresso-lift);
 }
 
 .mega-project-link__image img {
@@ -988,7 +1026,7 @@ html.intro-active body {
 
 .mega-studio__descriptor {
   margin-top: 12px;
-  color: var(--color-muted);
+  color: var(--color-muted-on-dark);
   font-size: 12px;
   line-height: 1.5;
 }
@@ -1002,7 +1040,7 @@ html.intro-active body {
   min-height: 245px;
   overflow: hidden;
   border-radius: 6px;
-  background-color: var(--color-cream-deep);
+  background-color: var(--color-espresso-lift);
 }
 
 /* The same button remains in the modal and morphs into its close icon. */

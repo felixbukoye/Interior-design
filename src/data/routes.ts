@@ -1,4 +1,6 @@
-import { featuredProjects, projectTypes } from "@/data/navigation";
+import { projectTypes } from "@/data/navigation";
+import { projects } from "@/data/projects";
+import type { Project } from "@/data/projects";
 import { site } from "@/data/site";
 
 export type RouteMeta = {
@@ -10,6 +12,8 @@ export type RouteMeta = {
   note: string;
   /** Two onward links, so placeholder pages are never dead ends. */
   onward: { label: string; href: string }[];
+  /** Set on project pages so the case study can show its photograph. */
+  project?: Project;
 };
 
 export const routeMeta: RouteMeta[] = [
@@ -175,33 +179,42 @@ export const routeMeta: RouteMeta[] = [
     eyebrow: "Selected work",
     description:
       "Homes, hospitality and workplaces from the last few years — each one photographed in the light it was designed for.",
-    note: "The full project archive is being prepared.",
+    note: "Eight recent projects across Lagos, from Lekki to Eko Atlantic.",
     onward: [
       { label: "Services", href: "/services" },
       { label: "The studio", href: "/studio/about" },
     ],
   },
-  ...projectTypes.map((type) => ({
-    href: type.href,
-    title: type.label,
-    eyebrow: "Projects by type",
-    description: "This collection is being prepared. In the meantime, explore the wider project archive or learn more about our services.",
-    note: "Project collection coming soon.",
-    onward: [
-      { label: "All projects", href: "/projects" },
-      { label: "Our services", href: "/services" },
-    ],
-  })),
-  ...featuredProjects.map((project) => ({
-    href: project.href,
-    title: project.label,
-    eyebrow: "Featured project",
-    description: "The story and details of this project are being prepared. Check back soon for the full case study.",
-    note: "Project case study coming soon.",
+  ...projectTypes.map((type) => {
+    const matching = projects.filter((project) => project.type === type.label);
+    return {
+      href: type.href,
+      title: type.label,
+      eyebrow: "Projects by type",
+      description: matching.length
+        ? `${matching.map((project) => project.name).join(", ")}. Each one designed, drawn and delivered by the studio from first conversation to final styling.`
+        : "This collection is being prepared. In the meantime, explore the wider project archive or learn more about our services.",
+      note: matching.length
+        ? `${matching.length} ${matching.length === 1 ? "project" : "projects"} in Lagos.`
+        : "Project collection coming soon.",
+      onward: [
+        { label: "All projects", href: "/projects" },
+        { label: "Our services", href: "/services" },
+      ],
+      project: matching[0] as Project | undefined,
+    };
+  }),
+  ...projects.map((project) => ({
+    href: `/projects/${project.slug}`,
+    title: project.name,
+    eyebrow: `${project.type} · ${project.year}`,
+    description: project.description,
+    note: `${project.location}.`,
     onward: [
       { label: "All projects", href: "/projects" },
       { label: "Our process", href: "/studio/process" },
     ],
+    project,
   })),
   {
     href: "/studio/about",

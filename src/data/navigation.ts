@@ -1,5 +1,5 @@
 import { images } from "@/data/images";
-import { site } from "@/data/site";
+import { featuredProjects, projects } from "@/data/projects";
 
 /** One source for the desktop mega menus, mobile accordions and footer. */
 export type NavLink = {
@@ -71,16 +71,24 @@ export const projectTypes: NavLink[] = [
   { label: "Retail", href: "/projects/retail" },
 ];
 
-export const featuredProjects = [
-  { label: site.projectNames[0], href: "/projects/project-one", image: images.heroLivingRoom },
-  { label: site.projectNames[1], href: "/projects/project-two", image: images.projectKitchen },
-  { label: site.projectNames[2], href: "/projects/project-three", image: images.projectBedroom },
-];
+/** The three most recent projects, drawn from the project library. */
+export const featuredProjectCards = featuredProjects.map((project) => ({
+  label: project.name,
+  href: `/projects/${project.slug}`,
+  image: project.image,
+}));
+
+/** Every project, for the archive page and the wide menus. */
+export const projectCards = projects.map((project) => ({
+  label: project.name,
+  href: `/projects/${project.slug}`,
+  image: project.image,
+}));
 
 export const featuredCaseStudy = {
-  description: `See how we turned a ${site.city} apartment into a calm, light-filled retreat.`,
-  href: featuredProjects[0].href,
-  image: images.heroLivingRoom,
+  description: "See how we turned a Lekki family home into a warm, low-lit retreat.",
+  href: `/projects/${featuredProjects[0].slug}`,
+  image: featuredProjects[0].image,
 };
 
 export const studioNav: DescribedNavLink[] = [

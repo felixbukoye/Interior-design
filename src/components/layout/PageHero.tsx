@@ -1,3 +1,4 @@
+import Image from "next/image";
 import Link from "next/link";
 import type { RouteMeta } from "@/data/routes";
 import { SplitHeading } from "@/components/motion/SplitHeading";
@@ -21,8 +22,11 @@ export function PageHero({
   description,
   note,
   onward,
-  status = "Page design in progress",
+  project,
+  status,
 }: PageHeroProps) {
+  const resolvedStatus = status ?? (project ? `${project.type} · ${project.location}` : "Page design in progress");
+
   return (
     <section className="page-hero tone-cream" data-tone="cream">
       <div className="shell">
@@ -46,11 +50,26 @@ export function PageHero({
             <Reveal delay={0.34} className="mt-8">
               <p className="inline-flex items-center gap-2.5 rounded-full border border-hairline-cream px-4 py-2 text-[12px] font-medium text-muted">
                 <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-gold" />
-                {status}
+                {resolvedStatus}
               </p>
             </Reveal>
           </div>
         </div>
+
+        {project && (
+          <Reveal delay={0.3} className="mt-14">
+            <div className="media aspect-landscape w-full" data-tone="cream">
+              <Image
+                src={project.image.src}
+                alt={project.image.alt}
+                width={project.image.width}
+                height={project.image.height}
+                sizes="(min-width: 1240px) 1160px, 100vw"
+                className="h-full w-full object-cover"
+              />
+            </div>
+          </Reveal>
+        )}
 
         <div className="mt-16 grid gap-x-8 border-t border-hairline-cream pt-2 md:grid-cols-2">
           {onward.map((link) => (

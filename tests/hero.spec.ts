@@ -1,7 +1,7 @@
 import { expect, test, type Page } from "@playwright/test";
 
 const headline = "Interiors that feel as good as they look.";
-const description = "[Studio Name] is a full-service interior design studio creating refined, modern spaces for homes, workplaces and hospitality across [City] and beyond.";
+const description = "Eden Interiors is a full-service interior design studio creating refined, modern spaces for homes, workplaces and hospitality across Lagos and beyond.";
 
 const browserErrors = new WeakMap<Page, string[]>();
 test.beforeEach(async ({ page }) => {
@@ -44,8 +44,8 @@ test.describe("home hero content and layout", () => {
     await expect(hero.locator("[data-hero-frame]")).toHaveAttribute("href", "/projects");
     await expect(hero.locator(".home-hero__info")).toHaveAttribute("href", "/projects");
     await expect(hero.locator(".home-hero__info-cell dt")).toHaveText(["Latest Project", "Type", "Location"]);
-    await expect(hero.locator(".home-hero__info-cell dd")).toHaveText(["[Project One]", "Residential", "[City]"]);
-    await expect(hero.locator("img")).toHaveAttribute("alt", /calm living room/);
+    await expect(hero.locator(".home-hero__info-cell dd")).toHaveText(["Lekki Residence", "Residential", "Lagos"]);
+    await expect(hero.locator("img")).toHaveAttribute("alt", /burnt-orange velvet sectional/);
     await expect(hero.locator("img")).toHaveAttribute("fetchpriority", "high");
     await expect.poll(() => hero.locator("img").evaluate((image: HTMLImageElement) => image.naturalWidth)).toBeGreaterThan(0);
 

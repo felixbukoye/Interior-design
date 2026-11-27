@@ -4,7 +4,7 @@ import { site } from "@/data/site";
 import "./globals.css";
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://example.com"),
+  metadataBase: new URL("https://edeninteriors.com"),
   title: {
     default: site.seo.defaultTitle,
     template: site.seo.titleTemplate,

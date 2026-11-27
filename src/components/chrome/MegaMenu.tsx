@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   featuredCaseStudy,
-  featuredProjects,
+  featuredProjectCards,
   projectTypes,
   serviceGroups,
   studioNav,
@@ -166,7 +166,7 @@ function ProjectsContent({ open, loadImages, onNavigate }: { open: boolean; load
       <div className="mega-column mega-projects__featured" data-mega-column>
         <p className="mega-label">Featured projects</p>
         <ul className="mega-project-list">
-          {featuredProjects.map((project) => (
+          {featuredProjectCards.map((project) => (
             <li key={project.href} data-mega-item>
               <Link href={project.href} onClick={onNavigate} className="mega-project-link">
                 <span className="mega-project-link__image">

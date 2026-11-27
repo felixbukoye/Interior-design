@@ -4,6 +4,7 @@ import { useRef } from "react";
 import Image from "next/image";
 import Link from "next/link";
 import { images } from "@/data/images";
+import { featuredProjects } from "@/data/projects";
 import { site } from "@/data/site";
 import { gsap, ScrollTrigger, SplitText, useGSAP } from "@/lib/gsap";
 import { Magnetic } from "@/components/motion/Magnetic";
@@ -144,7 +145,7 @@ export function HomeHero() {
 
         <div className="home-hero__side">
           <p className="home-hero__description" data-hero-copy>
-            {`${site.studioNamePlaceholder} is a full-service interior design studio creating refined, modern spaces for homes, workplaces and hospitality across ${site.city} and beyond.`}
+            {`${site.name} is a full-service interior design studio creating refined, modern spaces for homes, workplaces and hospitality across ${site.city} and beyond.`}
           </p>
           <div className="home-hero__actions" data-hero-actions>
             <ButtonLink href="/contact">Book a Consultation</ButtonLink>
@@ -166,13 +167,13 @@ export function HomeHero() {
           <span className="home-hero__image-reveal" data-hero-reveal>
             <span className="home-hero__image-motion" data-hero-image>
               <Image
-                src={images.heroLivingRoom.src}
-                alt={images.heroLivingRoom.alt}
+                src={images.heroLounge.src}
+                alt={images.heroLounge.alt}
                 fill
                 sizes="100vw"
                 preload
                 fetchPriority="high"
-                style={{ objectFit: "cover", objectPosition: "center 52%" }}
+                style={{ objectFit: "cover", objectPosition: "center 55%" }}
                 onLoad={() => ScrollTrigger.refresh()}
               />
             </span>
@@ -206,7 +207,7 @@ export function HomeHero() {
           <dl className="shell home-hero__info-content">
             <div className="home-hero__info-cell">
               <dt>Latest Project</dt>
-              <dd data-hero-value>{site.projectNames[0]}</dd>
+              <dd data-hero-value>{featuredProjects[0].name}</dd>
             </div>
             <div className="home-hero__info-cell">
               <dt>Type</dt>

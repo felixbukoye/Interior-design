@@ -2,9 +2,9 @@
  * Every image on the site lives here, with intrinsic dimensions and alt text,
  * so photography can be swapped in one place without touching components.
  *
- * These placeholders are locally stored, warm-neutral editorial interior
- * photographs. To use your own: drop a file into `public/images/`, point
- * `src` at it, and update `width`, `height` and `alt`.
+ * These are locally stored editorial interior photographs. To use your own:
+ * drop a file into `public/images/`, point `src` at it, and update `width`,
+ * `height` and `alt`.
  */
 
 export type SiteImage = {
@@ -15,8 +15,14 @@ export type SiteImage = {
 };
 
 export const images = {
-  heroLivingRoom: {
-    src: "/images/hero-living-room.jpg",
+  heroLounge: {
+    src: "/images/hero-lounge.jpg",
+    width: 2000,
+    height: 1143,
+    alt: "A dramatic burnt-orange velvet sectional in a deep charcoal lounge, under a glowing ring chandelier, with a bronze abstract canvas above",
+  },
+  projectIvoryLiving: {
+    src: "/images/project-ivory-living.jpg",
     width: 1376,
     height: 768,
     alt: "A calm living room in cream plaster and pale oak, with a low linen sofa and long afternoon light across the floor",
