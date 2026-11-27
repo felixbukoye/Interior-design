@@ -4,6 +4,7 @@
  */
 export const site = {
   name: "Eden Interiors",
+  studioNamePlaceholder: "[Studio Name]",
   descriptor: "Interior Architecture & Design",
   city: "[City]",
   country: "[Country]",

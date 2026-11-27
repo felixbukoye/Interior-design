@@ -222,6 +222,21 @@ test.describe("mobile navigation", () => {
     await expect(page.locator("html")).not.toHaveCSS("overflow", "clip");
   });
 
+  test("keeps the menu scroll-locked when the motion preference changes", async ({ page }) => {
+    await page.goto("/");
+    await waitForHeader(page);
+    await page.getByRole("button", { name: "Open menu" }).click();
+    await expect(page.locator("html")).toHaveCSS("overflow", "clip");
+    await page.emulateMedia({ reducedMotion: "no-preference" });
+    await expect(page.locator("html")).toHaveClass(/\blenis-stopped\b/);
+    await expect(page.locator("html")).toHaveCSS("overflow", "clip");
+    await page.emulateMedia({ reducedMotion: "reduce" });
+    await expect(page.locator("html")).not.toHaveClass(/\blenis\b/);
+    await expect(page.locator("html")).toHaveCSS("overflow", "clip");
+    await page.keyboard.press("Escape");
+    await expect(page.locator("html")).not.toHaveCSS("overflow", "clip");
+  });
+
   test("a same-page link restores focus to the menu button", async ({ page }) => {
     await page.goto("/contact");
     await waitForHeader(page);
