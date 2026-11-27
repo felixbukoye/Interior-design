@@ -8,8 +8,9 @@ Next.js App Router · TypeScript · Tailwind CSS · GSAP · Lenis.
 The foundation, responsive Eden Interiors header and home hero are in place:
 tokens, type, motion, the page-load intro, desktop mega menus, the mobile menu,
 and a route for every menu link. The studio is set in Lagos and the menus and
-project pages are filled with mock projects. No other home page sections have
-been added yet.
+project pages are filled with mock projects. The home page also has its
+Introduction section (portrait photo, overlapping espresso card and a
+full-bleed image band). No other home page sections have been added yet.
 
 ## Getting started
 
@@ -41,15 +42,16 @@ src/
     not-found.tsx           404
   components/
     chrome/                 Logo, MegaMenu, MobileMenu, ChevronIcon
-    home/                   HomeHero (copy, image, badge, project bar)
+    home/                   HomeHero (copy, image, badge, project bar),
+                            HomeIntro (photo, espresso card, image band)
     layout/                 PageShell, SiteHeader, SiteFooter, PageHero
     motion/                 MotionProvider (Lenis + intro), Reveal,
-                            SplitHeading, ParallaxImage, Magnetic,
-                            CursorFollower, DragSlider
+                            SplitHeading, LineFade, CountUp, ParallaxImage,
+                            Magnetic, CursorFollower, DragSlider
     ui/                     ButtonLink, CircleArrowLink, ArrowIcon,
                             InstagramIcon
   data/
-    site.ts                 studio identity, contact details + wordmark
+    site.ts                 studio identity, contact details, stats + wordmark
     projects.ts             the project library: name, type, place, image
     images.ts               every image: src, width, height, alt
     navigation.ts           header / footer / services menus
@@ -76,6 +78,9 @@ src/
   The home hero uses `hero-lounge.jpg`.
 - **Navigation** — `src/data/navigation.ts`. The service groups, project
   types, featured projects and studio links are shared by both menus.
+- **Home introduction stats** — `site.stats` in `src/data/site.ts`. The
+  count-up is driven by the numeric `value`, so replacing a placeholder with
+  a non-number would show the figure without the animation.
 - **Inner pages** — `src/data/routes.ts` (one entry per route; the
   `[...slug]` page is statically generated from it). Project pages show their
   photograph and details.

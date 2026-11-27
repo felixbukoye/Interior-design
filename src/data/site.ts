@@ -21,6 +21,15 @@ export const site = {
     line3: "Nigeria",
   },
   hours: "Studio visits by appointment, Monday to Friday",
+  /**
+   * Home introduction figures. Placeholder values — replace with the studio's
+   * real numbers. Counting is driven by `value`, so a non-numeric placeholder
+   * would render without the count-up animation.
+   */
+  stats: [
+    { value: 120, label: "projects completed" },
+    { value: 12, label: "years of experience" },
+  ],
   social: {
     instagram: "https://www.instagram.com/edeninteriors",
     pinterest: "https://www.pinterest.com/edeninteriors",
