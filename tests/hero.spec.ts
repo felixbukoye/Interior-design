@@ -123,7 +123,7 @@ test.describe("home hero content and layout", () => {
 
   test("all hero calls to action navigate to their intended routes", async ({ page }) => {
     const destinations = [
-      { selector: ".home-hero__actions .btn--gold", route: "/contact" },
+      { selector: ".home-hero__actions .btn--ember", route: "/contact" },
       { selector: ".home-hero__actions .btn--outline", route: "/projects" },
       { selector: ".home-hero__badge", route: "/contact" },
       { selector: ".home-hero__image-frame", route: "/projects" },
@@ -146,7 +146,7 @@ test.describe("without JavaScript", () => {
     await expect(page.locator("[data-intro]")).toBeHidden();
     await expect(page.locator(".site-header .site-logo")).toBeVisible();
     await expect(page.getByRole("heading", { level: 1, name: headline })).toBeVisible();
-    await expect(page.locator(".home-hero__actions .btn--gold")).toHaveAttribute("href", "/contact");
+    await expect(page.locator(".home-hero__actions .btn--ember")).toHaveAttribute("href", "/contact");
     await expect(page.locator(".home-hero__image-frame")).toBeVisible();
   });
 });
@@ -382,8 +382,8 @@ test.describe("animated hero", () => {
     const cells = page.locator(".home-hero__info-cell");
     await cells.nth(1).hover();
     await expect.poll(() => cells.nth(1).locator("dd").evaluate((element) => getComputedStyle(element).color))
-      .toBe("rgb(181, 138, 79)");
-    await expect(cells.nth(0).locator("dd")).toHaveCSS("color", "rgb(255, 241, 223)");
+      .toBe("rgb(255, 178, 122)");
+    await expect(cells.nth(0).locator("dd")).toHaveCSS("color", "rgb(255, 243, 234)");
   });
 
   test("client navigation back home replays the hero without replaying the intro", async ({ page }) => {

@@ -8,7 +8,7 @@ type CircleArrowLinkProps = {
 };
 
 /**
- * 44px gold disc with a diagonal arrow that rotates a further 45° on hover.
+ * 44px ember disc with a diagonal arrow that rotates a further 45° on hover.
  * Used for "go to project" affordances inside cards.
  */
 export function CircleArrowLink({ href, label, className }: CircleArrowLinkProps) {

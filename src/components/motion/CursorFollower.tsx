@@ -7,7 +7,7 @@ const DEFAULT_SIZE = 14;
 const ACTIVE_SIZE = 68;
 
 /**
- * A small gold disc that trails the pointer and expands with a label
+ * A small ember disc that trails the pointer and expands with a label
  * ("View", "Drag", …) over any element carrying `data-cursor="View"`.
  * Desktop pointers only; it is not rendered at all for touch or
  * reduced-motion users.

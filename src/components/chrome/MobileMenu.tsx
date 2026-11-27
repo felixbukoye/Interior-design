@@ -213,7 +213,7 @@ export function MobileMenu({ open, onNavigate }: MobileMenuProps) {
       </div>
       <div className="mobile-menu__bottom">
         <div className="shell">
-          <Link href="/contact" onClick={onNavigate} className="btn btn--gold mobile-menu__cta">
+          <Link href="/contact" onClick={onNavigate} className="btn btn--ember mobile-menu__cta">
             <span className="btn__fill" aria-hidden="true" />
             <span className="btn__label">Book a Consultation <ArrowIcon className="btn__arrow" /></span>
           </Link>

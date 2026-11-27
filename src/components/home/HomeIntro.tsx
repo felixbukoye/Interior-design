@@ -12,7 +12,7 @@ import { Reveal } from "@/components/motion/Reveal";
 import { SplitHeading } from "@/components/motion/SplitHeading";
 import { ButtonLink } from "@/components/ui/ButtonLink";
 
-/** The thin gold rule drawn across the top edge of the image band. */
+/** The thin ember rule drawn across the top edge of the image band. */
 function BandLine() {
   const ref = useRef<SVGSVGElement>(null);
 
@@ -53,7 +53,7 @@ function BandLine() {
       aria-hidden="true"
       focusable="false"
     >
-      <path data-intro-band-path d="M0 0.5H100" stroke="var(--color-gold)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
+      <path data-intro-band-path d="M0 0.5H100" stroke="var(--color-ember)" strokeWidth="1" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }
@@ -215,7 +215,7 @@ export function HomeIntro() {
               </dl>
 
               <div className="home-intro__action">
-                <ButtonLink href="/studio/about" variant="gold">
+                <ButtonLink href="/studio/about" variant="ember">
                   Discover our approach
                 </ButtonLink>
               </div>

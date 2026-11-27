@@ -174,7 +174,7 @@ export function MotionProvider({ children }: MotionProviderProps) {
   }, [isReady]);
 
   /* ---------------------------------------------------------------- *
-   * Page-load intro: espresso veil → wordmark → gold rule draws across →
+   * Page-load intro: espresso veil → wordmark → ember rule draws across →
    * veil lifts on clip-path → hero takes over.
    * ---------------------------------------------------------------- */
   useGSAP(
@@ -218,7 +218,7 @@ export function MotionProvider({ children }: MotionProviderProps) {
           { autoAlpha: 1, y: 0, duration: 0.5, ease: "soft" },
           0.02,
         )
-        // DrawSVG runs the gold rule out from its left edge.
+        // DrawSVG runs the ember rule out from its left edge.
         .fromTo(
           line,
           { drawSVG: "0% 0%" },
@@ -331,7 +331,7 @@ export function MotionProvider({ children }: MotionProviderProps) {
             <path
               ref={lineRef}
               d="M0 1H240"
-              stroke="var(--color-gold)"
+              stroke="var(--color-ember)"
               strokeWidth="1"
               vectorEffect="non-scaling-stroke"
             />

@@ -27,7 +27,7 @@ export function SiteFooter({ initialYear }: { initialYear: number }) {
             <p className="eyebrow">Say hello</p>
             <a
               href={site.emailHref}
-              className="mt-6 block font-display text-[clamp(24px,2.4vw,32px)] font-normal leading-tight tracking-[-0.02em] text-cream transition-colors duration-300 hover:text-gold"
+              className="mt-6 block font-display text-[clamp(24px,2.4vw,32px)] font-normal leading-tight tracking-[-0.02em] text-cream transition-colors duration-300 hover:text-ember"
             >
               {site.email}
             </a>
@@ -49,7 +49,7 @@ export function SiteFooter({ initialYear }: { initialYear: number }) {
             <p className="mt-6 text-body-sm text-muted-dark">{site.hours}</p>
 
             <div className="mt-8">
-              <ButtonLink href="/contact" variant="gold" className="h-11 px-6">
+              <ButtonLink href="/contact" variant="ember" className="h-11 px-6">
                 Start a project
               </ButtonLink>
             </div>
@@ -145,7 +145,7 @@ export function SiteFooter({ initialYear }: { initialYear: number }) {
               className="group inline-flex items-center gap-2.5 text-body-sm text-cream"
             >
               Back to top
-              <span className="grid h-8 w-8 place-items-center rounded-full border border-hairline-dark transition-colors duration-300 group-hover:border-gold group-hover:bg-gold group-hover:text-ink">
+              <span className="grid h-8 w-8 place-items-center rounded-full border border-hairline-dark transition-colors duration-300 group-hover:border-ember group-hover:bg-ember group-hover:text-ink">
                 <ArrowIcon className="h-3 w-3 -rotate-45" />
               </span>
             </button>

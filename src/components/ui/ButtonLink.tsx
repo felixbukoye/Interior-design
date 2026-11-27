@@ -3,11 +3,11 @@ import type { ReactNode } from "react";
 import { ArrowIcon } from "./ArrowIcon";
 import { Magnetic } from "@/components/motion/Magnetic";
 
-type Variant = "gold" | "dark" | "outline";
+type Variant = "ember" | "dark" | "outline";
 
 // Keep complete class names visible to Tailwind's content scanner.
 const variantClasses: Record<Variant, string> = {
-  gold: "btn--gold",
+  ember: "btn--ember",
   dark: "btn--dark",
   outline: "btn--outline",
 };
@@ -25,14 +25,14 @@ type ButtonLinkProps = {
 };
 
 /**
- * Primary CTA: gold by default, with a slow upward fill of gold-hover and a
+ * Primary CTA: ember by default, with a slow upward fill of ember-hover and a
  * 4px arrow nudge on hover or focus. The same markup covers dark and outline
  * variants, and the fill is hidden from assistive tech.
  */
 export function ButtonLink({
   href,
   children,
-  variant = "gold",
+  variant = "ember",
   className,
   magnetic = true,
   withArrow = true,

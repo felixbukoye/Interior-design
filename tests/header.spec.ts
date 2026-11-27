@@ -84,11 +84,11 @@ test.describe("server rendering and hydration", () => {
       };
     });
     expect(palette.panel.background).toBe(palette.mobile.background);
-    expect(palette.panel.color).toBe("rgb(255, 241, 223)");
+    expect(palette.panel.color).toBe("rgb(255, 243, 234)");
     // The header joins the panel, so the two read as one dark surface.
-    expect(palette.header).toBe("rgb(42, 39, 35)");
-    await expect(panel.locator(".mega-link__title").first()).toHaveCSS("color", "rgb(255, 241, 223)");
-    await expect(panel.locator(".mega-link__description").first()).toHaveCSS("color", "rgba(255, 241, 223, 0.62)");
+    expect(palette.header).toBe("rgb(115, 40, 15)");
+    await expect(panel.locator(".mega-link__title").first()).toHaveCSS("color", "rgb(255, 243, 234)");
+    await expect(panel.locator(".mega-link__description").first()).toHaveCSS("color", "rgba(255, 243, 234, 0.74)");
   });
 
   test("body attributes added by a browser extension do not break hydration", async ({ page }) => {

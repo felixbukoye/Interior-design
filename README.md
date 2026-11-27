@@ -98,15 +98,16 @@ exposed through `tailwind.config.ts`, so a hue changes in one place.
 
 | Token | Value | Notes |
 | --- | --- | --- |
-| cream | `#FFF1DF` | primary background |
-| cream-deep | `#F8E4C9` | tonal break / hairline sections |
-| espresso | `#2A2723` → `#34302A` | subtle vertical gradient |
-| ink | `#171513` | footer |
-| gold / gold-hover | `#B58A4F` / `#C99A5B` | accent, CTA fill |
-| gold text | `#806039` | AA-safe menu labels on cream (5.18:1) |
-| muted-on-cream | `#6B6157` | **AA-safe body copy** (5.44:1) |
-| muted-on-dark | `rgba(255,241,223,0.62)` | 6.06:1 on espresso |
-| hairline cream / dark | `rgba(23,21,19,0.1)` / `rgba(255,255,255,0.08)` | dividers |
+| cream | `#FFF3EA` | primary background |
+| cream-deep | `#FBE3D2` | tonal break / hairline sections |
+| espresso | `#73280F` → `#8A3413` | burnt-orange gradient (panels, footer bar) |
+| ink | `#1B1411` | footer |
+| ember / ember-hover | `#E05C28` / `#E85C2A` | accent, CTA fill |
+| ember-text | `#A63A12` | AA-safe menu labels on cream (5.95:1) |
+| ember-on-dark | `#FFB27A` | accent labels, stats and icons on espresso (≥4.6:1) |
+| muted-on-cream | `#6D5A50` | **AA-safe body copy** (5.97:1) |
+| muted-on-dark | `rgba(255,243,234,0.74)` | 5.89:1 on espresso |
+| hairline cream / dark | `rgba(27,20,17,0.1)` / `rgba(255,255,255,0.14)` | dividers |
 
 Type: Urbanist (display, 400–500), Inter (body 16/28), Playfair Display
 Italic (small accents) — all self-hosted variable woff2 subsets, with no
@@ -132,7 +133,7 @@ and ScrollTrigger is refreshed after fonts and images load. Lenis loads after
 the intro releases scrolling, and switches to native scrolling whenever the
 reduced-motion preference is enabled.
 
-**Page-load intro** (`MotionProvider`): espresso veil → wordmark → gold rule
+**Page-load intro** (`MotionProvider`): espresso veil → wordmark → ember rule
 drawn with DrawSVG → veil lifts on `clip-path`. The page stays laid out behind
 the veil while Inter and Urbanist load. If they stall for 1.2s after hydration,
 the page uses system fallbacks for that page load, preventing late font swaps
@@ -224,7 +225,7 @@ three desktop menus or the mobile menu and its three accordions.
 
 ## Accessibility notes
 
-- Semantic landmarks, a skip link, and visible focus rings (gold on dark).
+- Semantic landmarks, a skip link, and visible focus rings (ember-on-dark on panels).
 - The mobile dialog locks scroll, traps focus, closes on Escape and restores focus.
 - Desktop disclosures support hover and keyboard activation; focus loops through
   the open panel and its trigger, and Escape restores focus to that trigger.

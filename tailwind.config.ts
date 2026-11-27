@@ -18,9 +18,10 @@ const config: Config = {
           lift: "var(--color-espresso-lift)",
         },
         ink: "var(--color-ink)",
-        gold: {
-          DEFAULT: "var(--color-gold)",
-          hover: "var(--color-gold-hover)",
+        ember: {
+          DEFAULT: "var(--color-ember)",
+          hover: "var(--color-ember-hover)",
+          text: "var(--color-ember-text)",
         },
         muted: {
           DEFAULT: "var(--color-muted)",

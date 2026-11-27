@@ -123,12 +123,12 @@ test.describe("introduction content and layout", () => {
 
     expect(metrics.iconPadding).toBe("56px");
     expect(metrics.titleSize).toBe("44px");
-    expect(metrics.titleColor).toBe("rgb(255, 241, 223)");
+    expect(metrics.titleColor).toBe("rgb(255, 243, 234)");
     expect(metrics.bodySize).toBe("16px");
     expect(metrics.bodyLineHeight).toBe("28px");
-    expect(metrics.bodyColor).toBe("rgba(255, 241, 223, 0.62)");
+    expect(metrics.bodyColor).toBe("rgba(255, 243, 234, 0.74)");
     expect(metrics.valueSize).toBe("44px");
-    expect(metrics.valueColor).toBe("rgb(181, 138, 79)");
+    expect(metrics.valueColor).toBe("rgb(255, 178, 122)");
   });
 
   test("the image band is full-bleed and 560px tall, 120px below the block", async ({ page }) => {
@@ -219,7 +219,7 @@ test.describe("introduction motion", () => {
     await expect(section(page).locator(".home-intro__stat-value")).toHaveText(["120+", "12+"]);
   });
 
-  test("the band parallaxes and draws its gold hairline", async ({ page }) => {
+  test("the band parallaxes and draws its ember hairline", async ({ page }) => {
     await page.goto("/");
     await waitForIntro(page);
     await revealSection(page);

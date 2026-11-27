@@ -49,7 +49,7 @@ export function PageHero({
 
             <Reveal delay={0.34} className="mt-8">
               <p className="inline-flex items-center gap-2.5 rounded-full border border-hairline-cream px-4 py-2 text-[12px] font-medium text-muted">
-                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-gold" />
+                <span aria-hidden="true" className="h-1.5 w-1.5 rounded-full bg-ember" />
                 {resolvedStatus}
               </p>
             </Reveal>
@@ -75,7 +75,7 @@ export function PageHero({
           {onward.map((link) => (
             <Link key={link.href} href={link.href} className="onward-card group">
               <span>{link.label}</span>
-              <ArrowIcon className="h-4 w-4 shrink-0 text-gold" />
+              <ArrowIcon className="h-4 w-4 shrink-0 text-ember" />
             </Link>
           ))}
         </div>
