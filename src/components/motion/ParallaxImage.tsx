@@ -17,6 +17,8 @@ type ParallaxImageProps = {
   strength?: number;
   /** Vertical offset of the scrub, in percent of the image height. */
   shift?: number;
+  /** Starting scale, relaxing to 1 as the frame crosses the viewport. */
+  scaleFrom?: number;
 };
 
 /**
@@ -32,6 +34,7 @@ export function ParallaxImage({
   priority = false,
   strength = 1,
   shift = 10,
+  scaleFrom = 1,
 }: ParallaxImageProps) {
   const frameRef = useRef<HTMLDivElement>(null);
 
@@ -45,15 +48,16 @@ export function ParallaxImage({
       const mm = gsap.matchMedia();
 
       mm.add("(prefers-reduced-motion: reduce)", () => {
-        gsap.set(media, { yPercent: 0 });
+        gsap.set(media, { yPercent: 0, scale: 1 });
       });
 
       mm.add("(prefers-reduced-motion: no-preference)", () => {
         gsap.fromTo(
           media,
-          { yPercent: -shift * strength },
+          { yPercent: -shift * strength, scale: scaleFrom },
           {
             yPercent: shift * strength,
+            scale: 1,
             ease: "none",
             scrollTrigger: {
               trigger: frame,
@@ -68,7 +72,7 @@ export function ParallaxImage({
 
       return () => mm.revert();
     },
-    { scope: frameRef, dependencies: [strength, shift] },
+    { scope: frameRef, dependencies: [strength, shift, scaleFrom] },
   );
 
   return (

@@ -27,6 +27,18 @@ export const images = {
     height: 768,
     alt: "A calm living room in cream plaster and pale oak, with a low linen sofa and long afternoon light across the floor",
   },
+  introDiningRoom: {
+    src: "/images/intro-dining-room.jpg",
+    width: 928,
+    height: 1152,
+    alt: "A warm dining room with a raw oak table, linen chairs, a woven rattan pendant and afternoon light across a limewash wall",
+  },
+  introConsoleBand: {
+    src: "/images/intro-console-band.jpg",
+    width: 1584,
+    height: 672,
+    alt: "A slim oak console in a sunlit hallway, holding a ceramic vase and books beneath a framed triangular artwork",
+  },
   projectKitchen: {
     src: "/images/project-kitchen.jpg",
     width: 768,

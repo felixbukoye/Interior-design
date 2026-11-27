@@ -1654,6 +1654,251 @@ html.intro-active body {
 }
 
 /* ------------------------------------------------------------------ *
+ *  Home introduction — photo, overlapping espresso card, image band
+ * ------------------------------------------------------------------ */
+.home-intro {
+  --intro-gap: clamp(20px, 2.6vw, 32px);
+  background: var(--color-cream);
+  color: var(--color-ink);
+  padding-top: 120px;
+}
+
+/* 12 columns at desktop. The photo takes 5 and the card takes the rest,
+   pulled 40px to the left so it overlaps the photograph's edge. */
+.home-intro__grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  /* Row gap plus the card's pull gives the stacked overlap: 24 - 48 = -24. */
+  row-gap: 24px;
+}
+
+.home-intro__photo {
+  position: relative;
+  aspect-ratio: 4 / 5;
+  overflow: hidden;
+  border-radius: 6px;
+  background: var(--color-cream-deep);
+}
+
+/* The wipe layer; the frame above keeps the rounded corners. */
+.home-intro__photo-clip {
+  position: absolute;
+  inset: 0;
+  overflow: hidden;
+}
+
+/* The image is scaled by GSAP; the wrapper keeps the crop stable. */
+.home-intro__photo-motion {
+  position: absolute;
+  inset: 0;
+  transform-origin: center;
+  will-change: transform;
+}
+
+.home-intro__photo-motion img {
+  object-fit: cover;
+}
+
+/* The card sits over the photo's bottom edge on small screens. */
+.home-intro__card {
+  position: relative;
+  z-index: 1;
+  /* 24px of the 48px pull covers the photo; the rest is the row gap. */
+  margin-top: -48px;
+  border-radius: 6px;
+  background: var(--espresso-gradient);
+  color: var(--color-cream);
+  box-shadow: 0 26px 50px -30px rgba(23, 21, 19, 0.45);
+}
+
+.home-intro__card-inner {
+  display: flex;
+  flex-direction: column;
+  gap: 40px;
+  padding: 32px;
+}
+
+.home-intro__eyebrow p {
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  color: var(--color-gold-hover);
+  font-family: var(--font-inter), system-ui, sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  line-height: 1.3;
+  text-transform: uppercase;
+}
+
+.home-intro__eyebrow-rule {
+  display: block;
+  width: 24px;
+  height: 1px;
+  flex: none;
+  background: var(--color-gold);
+}
+
+.home-intro__title {
+  margin: 0;
+  font-family: var(--font-urbanist), system-ui, sans-serif;
+  font-size: 44px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1.12;
+  color: var(--color-cream);
+  text-wrap: balance;
+}
+
+.home-intro__copy {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* 16/28 muted body copy, the two paragraphs 20px apart. */
+.home-intro__body {
+  margin: 0;
+  color: var(--color-muted-on-dark);
+  font-size: 16px;
+  line-height: 28px;
+}
+
+.home-intro__rule {
+  height: 1px;
+  background: var(--color-hairline-dark);
+}
+
+.home-intro__stats {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+/* The value reads above the label; the DOM keeps dt before dd so the
+   description list stays valid and announces "projects completed, 120". */
+.home-intro__stat {
+  display: flex;
+  flex-direction: column-reverse;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.home-intro__stat-value {
+  margin: 0;
+  color: var(--color-gold);
+  font-family: var(--font-urbanist), system-ui, sans-serif;
+  font-size: 44px;
+  font-weight: 500;
+  letter-spacing: -0.02em;
+  line-height: 1;
+  font-variant-numeric: tabular-nums;
+}
+
+.home-intro__stat-label {
+  color: var(--color-muted-on-dark);
+  font-size: 14px;
+  line-height: 1.4;
+}
+
+.home-intro__action {
+  display: flex;
+}
+
+/* ---- Full-bleed band ------------------------------------------------ */
+
+.home-intro__band-wrap {
+  margin-top: 120px;
+  padding-top: 1px;
+}
+
+.home-intro__band {
+  position: relative;
+}
+
+.home-intro__band-frame {
+  height: 560px;
+  border-radius: 0;
+  background: var(--color-espresso);
+}
+
+/* A taller travel layer than the default, so the ±12% scrub never exposes
+   an edge at the top or bottom of the band. */
+.home-intro__band-frame [data-parallax-media] {
+  top: -20%;
+  height: 140%;
+}
+
+/* A hairline drawn across the band's top edge on entry. */
+.home-intro__band-line {
+  position: absolute;
+  top: 0;
+  right: 0;
+  left: 0;
+  z-index: 1;
+  width: 100%;
+  height: 1px;
+  overflow: visible;
+}
+
+@media (min-width: 1024px) {
+  .home-intro__grid {
+    /* 12 columns — the photo is columns 1–5, the card 6–12. */
+    grid-template-columns: repeat(12, minmax(0, 1fr));
+    column-gap: var(--intro-gap);
+    /* Both items share the row height, so the card is exactly as tall as
+       the photograph and the composition stays flush at the bottom. */
+    align-items: stretch;
+  }
+
+  /* The photograph keeps its 4:5 crop at every width. */
+  .home-intro__photo {
+    grid-column: 1 / span 5;
+  }
+
+  .home-intro__card {
+    grid-column: 6 / span 7;
+    /* Column 6 starts one gutter past the photo's right edge, so the pull
+       has to clear that gutter before it starts overlapping the photograph:
+       the card ends up exactly 40px inside it. The matching pull on the
+       right keeps the card's outer edge flush with the 12-column container. */
+    margin-top: 0;
+    margin-inline: calc(-40px - var(--intro-gap));
+    display: flex;
+    flex-direction: column;
+  }
+
+  .home-intro__card-inner {
+    padding: 56px;
+    flex: 1;
+    justify-content: center;
+    gap: 40px;
+  }
+}
+
+@media (max-width: 767px) {
+  .home-intro {
+    padding-top: 72px;
+  }
+
+  .home-intro__title {
+    font-size: 34px;
+  }
+
+  .home-intro__stat-value {
+    font-size: 36px;
+  }
+
+  .home-intro__band-wrap {
+    margin-top: 72px;
+  }
+
+  .home-intro__band-frame {
+    height: 360px;
+  }
+}
+
+/* ------------------------------------------------------------------ *
  *  Ambient grain — a warm, almost invisible texture
  * ------------------------------------------------------------------ */
 .grain {
