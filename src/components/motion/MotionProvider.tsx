@@ -10,7 +10,7 @@ import {
   useState,
 } from "react";
 import type { ReactNode } from "react";
-import Lenis from "lenis";
+import type Lenis from "lenis";
 import { ScrollTrigger, gsap, useGSAP } from "@/lib/gsap";
 import { site } from "@/data/site";
 
@@ -49,9 +49,67 @@ export function MotionProvider({ children }: MotionProviderProps) {
   const labelRef = useRef<HTMLDivElement>(null);
   const lineRef = useRef<SVGPathElement>(null);
   const lenisRef = useRef<Lenis | null>(null);
+  const scrollLockedRef = useRef(false);
   const finished = useRef(false);
 
   const [isReady, setIsReady] = useState(false);
+  const [areFontsReady, setAreFontsReady] = useState(false);
+
+  // Hidden text may not count as a used font, so explicitly request the two
+  // faces used in the initial viewport. Until their metrics settle, the site
+  // is laid out but not painted behind the intro.
+  useEffect(() => {
+    let disposed = false;
+    let released = false;
+    let ownsFallback = false;
+    let frame = 0;
+    let fallbackTimer = 0;
+    const release = (useFallback: boolean) => {
+      if (disposed || released) return;
+      released = true;
+      window.clearTimeout(fallbackTimer);
+      if (useFallback) {
+        // If fonts are stalled, keep a stable system fallback for this page
+        // load. A late font response must not rearrange an already-visible hero.
+        document.documentElement.dataset.fontFallback = "true";
+        ownsFallback = true;
+      }
+      setAreFontsReady(true);
+      frame = requestAnimationFrame(() => ScrollTrigger.refresh());
+    };
+
+    fallbackTimer = window.setTimeout(() => release(true), 1200);
+    const fontSet = document.fonts;
+    if (!fontSet) {
+      release(true);
+    } else {
+      const styles = getComputedStyle(document.documentElement);
+      const family = (token: string) => styles.getPropertyValue(token).split(",")[0].trim() || "sans-serif";
+      try {
+        Promise.all([
+          fontSet.load(`500 16px ${family("--font-inter")}`),
+          fontSet.load(`500 44px ${family("--font-urbanist")}`),
+        ])
+          .then((faces) => {
+            if (faces.some((face) => face.length === 0)) {
+              release(true);
+              return;
+            }
+            return fontSet.ready.then(() => release(false));
+          })
+          .catch(() => release(true));
+      } catch {
+        release(true);
+      }
+    }
+
+    return () => {
+      disposed = true;
+      window.clearTimeout(fallbackTimer);
+      cancelAnimationFrame(frame);
+      if (ownsFallback) delete document.documentElement.dataset.fontFallback;
+    };
+  }, []);
 
   const finishIntro = useCallback(() => {
     if (finished.current) return;
@@ -65,31 +123,55 @@ export function MotionProvider({ children }: MotionProviderProps) {
    * Lenis ⇄ ScrollTrigger
    * ---------------------------------------------------------------- */
   useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
-
-    const lenis = new Lenis({
-      lerp: 0.1,
-      smoothWheel: true,
-      wheelMultiplier: 1,
-      touchMultiplier: 1.5,
-      autoRaf: false,
-      anchors: false,
-    });
-    lenisRef.current = lenis;
-
-    lenis.on("scroll", ScrollTrigger.update);
-
-    const raf = (time: number) => lenis.raf(time * 1000);
-    gsap.ticker.add(raf);
-    gsap.ticker.lagSmoothing(0);
-
-    return () => {
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    let lenis: Lenis | null = null;
+    let disposed = false;
+    let generation = 0;
+    const raf = (time: number) => lenis?.raf(time * 1000);
+    const stop = () => {
+      if (!lenis) return;
       gsap.ticker.remove(raf);
       gsap.ticker.lagSmoothing(500, 33);
       lenis.destroy();
+      lenis = null;
       lenisRef.current = null;
     };
-  }, []);
+    const syncMotion = () => {
+      if (reducedMotion.matches) {
+        generation += 1;
+        stop();
+      } else if (isReady && !lenis) {
+        // The intro locks scrolling, so defer Lenis until it releases the page.
+        // Native scrolling remains usable if the optional chunk cannot load.
+        const request = ++generation;
+        void import("lenis").then(({ default: Lenis }) => {
+          if (disposed || request !== generation || reducedMotion.matches) return;
+          lenis = new Lenis({
+            lerp: 0.1,
+            smoothWheel: true,
+            wheelMultiplier: 1,
+            touchMultiplier: 1.5,
+            autoRaf: false,
+            anchors: false,
+          });
+          lenisRef.current = lenis;
+          if (scrollLockedRef.current) lenis.stop();
+          lenis.on("scroll", ScrollTrigger.update);
+          gsap.ticker.add(raf);
+          gsap.ticker.lagSmoothing(0);
+        }).catch(() => {});
+      }
+    };
+
+    syncMotion();
+    reducedMotion.addEventListener("change", syncMotion);
+    return () => {
+      disposed = true;
+      generation += 1;
+      reducedMotion.removeEventListener("change", syncMotion);
+      stop();
+    };
+  }, [isReady]);
 
   /* ---------------------------------------------------------------- *
    * Page-load intro: espresso veil → wordmark → gold rule draws across →
@@ -98,6 +180,7 @@ export function MotionProvider({ children }: MotionProviderProps) {
   useGSAP(
     () => {
       const overlay = overlayRef.current;
+      const inner = overlay?.querySelector<HTMLElement>(".intro__inner");
       const label = labelRef.current;
       const line = lineRef.current;
       if (!overlay) return;
@@ -109,14 +192,20 @@ export function MotionProvider({ children }: MotionProviderProps) {
         return;
       }
 
-      const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-      if (reduced) {
+      document.documentElement.classList.add("intro-active");
+      // Do not lift the veil onto a hidden page on a slow connection. The
+      // shared font gate releases either with the fonts or a stable fallback.
+      if (!areFontsReady) {
+        return () => document.documentElement.classList.remove("intro-active");
+      }
+
+      const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+      if (reducedMotion.matches) {
         gsap.set(overlay, { display: "none" });
         finishIntro();
         return;
       }
-
-      document.documentElement.classList.add("intro-active");
+      if (inner) inner.style.visibility = "visible";
 
       const timeline = gsap.timeline({ defaults: { ease: "luxe" }, paused: true });
 
@@ -147,30 +236,27 @@ export function MotionProvider({ children }: MotionProviderProps) {
         .call(finishIntro, [], "lift+=0.42")
         .set(overlay, { display: "none" });
 
-      // Cancel the font gate and timers on cleanup so Strict Mode's effect
-      // replay cannot start a stale timeline or mutate an unmounted tree.
-      let disposed = false;
-      let startTimer = 0;
-      let fallbackTimer = 0;
-      const fontsReady = document.fonts?.ready ?? Promise.resolve();
-      const fallback = new Promise<void>((resolve) => {
-        fallbackTimer = window.setTimeout(resolve, 1200);
-      });
-      Promise.race([fontsReady, fallback]).then(() => {
-        if (disposed) return;
-        window.clearTimeout(fallbackTimer);
-        startTimer = window.setTimeout(() => timeline.play(0), 80);
-      });
-
-      return () => {
-        disposed = true;
+      // Cancel the timer on cleanup so Strict Mode's effect replay cannot
+      // start a stale timeline or mutate an unmounted tree. If the preference
+      // changes mid-intro, finish immediately instead of continuing the lift.
+      const startTimer = window.setTimeout(() => timeline.play(0), 80);
+      const onMotionChange = () => {
+        if (!reducedMotion.matches) return;
         window.clearTimeout(startTimer);
-        window.clearTimeout(fallbackTimer);
         timeline.kill();
+        gsap.set(overlay, { display: "none" });
+        finishIntro();
+      };
+      reducedMotion.addEventListener("change", onMotionChange);
+      return () => {
+        reducedMotion.removeEventListener("change", onMotionChange);
+        window.clearTimeout(startTimer);
+        timeline.kill();
+        if (inner) inner.style.visibility = "";
         document.documentElement.classList.remove("intro-active");
       };
     },
-    { scope: rootRef },
+    { scope: rootRef, dependencies: [areFontsReady], revertOnUpdate: true },
   );
 
   /* ---------------------------------------------------------------- *
@@ -201,10 +287,12 @@ export function MotionProvider({ children }: MotionProviderProps) {
       return;
     }
     const el = typeof target === "string" ? document.querySelector(target) : target;
-    el?.scrollIntoView({ behavior: "smooth" });
+    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    el?.scrollIntoView({ behavior: reduced ? "auto" : "smooth" });
   }, []);
 
   const setScrollLocked = useCallback((locked: boolean) => {
+    scrollLockedRef.current = locked;
     const lenis = lenisRef.current;
     if (locked) {
       lenis?.stop();
@@ -216,13 +304,13 @@ export function MotionProvider({ children }: MotionProviderProps) {
   }, []);
 
   const value = useMemo<MotionContextValue>(
-    () => ({ isReady, scrollTo, setScrollLocked }),
-    [isReady, scrollTo, setScrollLocked],
+    () => ({ isReady: isReady && areFontsReady, scrollTo, setScrollLocked }),
+    [isReady, areFontsReady, scrollTo, setScrollLocked],
   );
 
   return (
     <MotionContext.Provider value={value}>
-      <div ref={rootRef} id="site-root">
+      <div ref={rootRef} id="site-root" data-fonts-ready={areFontsReady}>
         {children}
       </div>
 

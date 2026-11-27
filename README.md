@@ -5,9 +5,10 @@ Next.js App Router · TypeScript · Tailwind CSS · GSAP · Lenis.
 
 ## Status
 
-The foundation and the responsive Eden Interiors header are in place: tokens,
-type, motion, the page-load intro, desktop mega menus, the mobile menu, and
-placeholder routes for every menu link. No home page sections are built yet.
+The foundation, responsive Eden Interiors header and home hero are in place:
+tokens, type, motion, the page-load intro, desktop mega menus, the mobile menu,
+and placeholder routes for every menu link. No other home page sections have
+been added yet.
 
 ## Getting started
 
@@ -34,11 +35,12 @@ src/
     globals.css             tokens, primitives, chrome, intro, grain
     (site)/layout.tsx       PageShell: motion provider + header + footer
     (site)/template.tsx     per-route scroll reset + ScrollTrigger refresh
-    (site)/page.tsx         home shell (sections come next)
+    (site)/page.tsx         home hero
     (site)/[...slug]/       one static page per placeholder route
     not-found.tsx           404
   components/
     chrome/                 Logo, MegaMenu, MobileMenu, ChevronIcon
+    home/                   HomeHero (copy, image, badge, project bar)
     layout/                 PageShell, SiteHeader, SiteFooter, PageHero
     motion/                 MotionProvider (Lenis + intro), Reveal,
                             SplitHeading, ParallaxImage, Magnetic,
@@ -51,7 +53,8 @@ src/
     navigation.ts           header / footer / services menus
     routes.ts               title + copy + onward links per placeholder page
   lib/
-    gsap.ts                 single plugin registration + custom eases
+    gsap.ts                 core plugin registration + custom eases
+    gsap-advanced.ts        on-demand Flip / Draggable registration
     fonts.ts                self-hosted variable fonts (next/font/local)
   fonts/                    woff2 files + OFL licences
 ```
@@ -59,8 +62,8 @@ src/
 ## Editing content
 
 - **Studio details** — `src/data/site.ts`. The name and email are Eden
-  Interiors; unresolved city, project names and other details remain bracketed
-  placeholders in this file.
+  Interiors; the hero's requested `[Studio Name]` and the unresolved city,
+  project names and other details remain bracketed placeholders in this file.
 - **Photography** — `src/data/images.ts`, each entry with `src`, `width`,
   `height` and `alt`. Drop files in `public/images/` and update the entry.
   To swap in Unsplash URLs later, replace `src` and add the host to
@@ -90,31 +93,52 @@ exposed through `tailwind.config.ts`, so a hue changes in one place.
 | hairline cream / dark | `rgba(23,21,19,0.1)` / `rgba(255,255,255,0.08)` | dividers |
 
 Type: Urbanist (display, 400–500), Inter (body 16/28), Playfair Display
-Italic (small accents) — all self-hosted variable woff2 subsets, so there is
-no third-party font request and no fallback-metric layout shift.
+Italic (small accents) — all self-hosted variable woff2 subsets, with no
+third-party font requests. A font gate prevents visible metric swaps on load.
 
 Layout: 1240px container, 40px desktop gutters, 120/88/64px section padding,
 card radius 6px, button 48px tall with 28px padding, eyebrow 14px at 0.04em.
 
 ## Motion system
 
-`src/lib/gsap.ts` registers ScrollTrigger, SplitText, Flip, Draggable,
-DrawSVGPlugin and CustomEase exactly once, and defines the studio eases:
+`src/lib/gsap.ts` registers ScrollTrigger, SplitText, DrawSVGPlugin and
+CustomEase exactly once, and defines the studio eases. The heavier Flip and
+Draggable plugins register once in `gsap-advanced.ts` when an interaction
+imports them, keeping them out of the initial home-page bundle:
 
 - `luxe` — `CustomEase 0.65, 0, 0.35, 1` for spatial movement
 - `soft` — `CustomEase 0.16, 1, 0.3, 1` for entrances
 
-Every animation runs inside `useGSAP`, so StrictMode remounts revert tweens,
+GSAP animations run inside `useGSAP`, so StrictMode remounts revert tweens,
 splits and ScrollTriggers cleanly. Each component uses `gsap.matchMedia` to
 disable parallax, pinning and cursor effects for `prefers-reduced-motion`,
-and ScrollTrigger is refreshed after fonts and images load.
+and ScrollTrigger is refreshed after fonts and images load. Lenis loads after
+the intro releases scrolling, and switches to native scrolling whenever the
+reduced-motion preference is enabled.
 
 **Page-load intro** (`MotionProvider`): espresso veil → wordmark → gold rule
-drawn with DrawSVG → veil lifts on `clip-path` with the hero already rising
-behind it. About 1.8s end to end. It starts only once `document.fonts.ready`
-settles (or after a 1.2s cap), so the veil never lifts onto fallback type.
-The provider lives in the route layout, so the intro plays once per full page
-load and never replays on client-side navigation.
+drawn with DrawSVG → veil lifts on `clip-path`. The page stays laid out behind
+the veil while Inter and Urbanist load. If they stall for 1.2s after hydration,
+the page uses system fallbacks for that page load, preventing late font swaps
+from moving visible content. The intro then takes about 1.8s; the home hero
+begins its sequence as the veil finishes lifting. The provider lives in the
+route layout, so the intro plays once per full page load and never replays on
+client-side navigation. With JavaScript disabled the server content is shown;
+an 8s CSS fail-safe also exposes it if the client scripts fail.
+
+## Home hero
+
+`HomeHero` keeps the headline, copy, calls to action and project details in
+server-rendered markup. Once the intro lifts, masked SplitText lines rise in;
+the copy follows as the full-width image reveals from an equal 8% inset. The
+image's overscanned layer then scrubs gently on scroll without exposing an
+empty edge. The consultation badge has a magnetic pull and rotating text that
+responds to scroll velocity. The photo and info bar link to `/projects`, while
+the badge and primary button link to `/contact`. The info bar is horizontally
+scrollable by touch or keyboard on mobile. With reduced motion, content is
+shown without an intro or spatial reveal after the font gate; parallax, badge
+rotation, smooth scrolling and the cursor are disabled. The image frame has a
+reserved height, so its loading and animation do not move the rest of the page.
 
 ## Header and navigation
 
@@ -158,8 +182,16 @@ with a single edit per image.
 
 ## Quality results
 
-A previous Lighthouse 12.8 production run with simulated mobile throttling
-(scores vary between runs):
+Four Lighthouse 13.6 runs on the production build with the hero measured mobile
+performance **89–91** and desktop **98–99**; accessibility, best practices and
+SEO were **100** in each run. CLS was **0** on both devices. Mobile performance
+varies around the 90 target rather than consistently exceeding it. The 31
+Playwright checks pass on development and production, and axe found no WCAG
+2/2.1 A/AA violations in the desktop and mobile hero with normal or reduced
+motion.
+
+A Lighthouse 12.8 production run on the earlier scaffold, before the hero was
+added (scores vary between runs):
 
 | Category | Home (mobile) | Home (desktop) |
 | --- | --- | --- |

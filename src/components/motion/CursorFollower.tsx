@@ -17,16 +17,20 @@ export function CursorFollower() {
   const labelRef = useRef<HTMLSpanElement>(null);
   const [enabled, setEnabled] = useState(false);
 
-  // Decide once on mount: fine pointer, wide enough viewport, and motion
-  // allowed. Anything else keeps the element out of the DOM entirely.
-  // Rendering it only after mount avoids a server/client mismatch.
+  // Rendering only after a capability check avoids a server/client mismatch.
+  // Listen for changes too: a resized viewport or a newly enabled reduced-
+  // motion preference should remove the follower without a page reload.
   useEffect(() => {
-    const ok =
-      window.matchMedia("(min-width: 1024px)").matches &&
-      window.matchMedia("(pointer: fine)").matches &&
-      !window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    // eslint-disable-next-line react-hooks/set-state-in-effect -- one-shot capability probe
-    setEnabled(ok);
+    const desktop = window.matchMedia("(min-width: 1024px)");
+    const finePointer = window.matchMedia("(pointer: fine)");
+    const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
+    const queries = [desktop, finePointer, reducedMotion];
+    const update = () => {
+      setEnabled(desktop.matches && finePointer.matches && !reducedMotion.matches);
+    };
+    update();
+    queries.forEach((query) => query.addEventListener("change", update));
+    return () => queries.forEach((query) => query.removeEventListener("change", update));
   }, []);
 
   useEffect(() => {
@@ -86,9 +90,13 @@ export function CursorFollower() {
       if (host) {
         expand(host.dataset.cursor || "View");
         dot.dataset.mode = "label";
+        gsap.to(dot, { scale: 1, duration: 0.3, ease: "soft" });
         return;
       }
       if (target?.closest("a, button, [role='button']")) {
+        // Leaving a labelled surface for another link should not carry its
+        // label along with the pointer (for example, image → hero badge).
+        if (dot.dataset.mode === "label") collapse();
         dot.dataset.mode = "link";
         gsap.to(dot, { scale: 1.6, duration: 0.35, ease: "soft" });
         return;

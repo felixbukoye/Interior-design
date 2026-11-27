@@ -2,7 +2,8 @@
 
 import { useRef } from "react";
 import type { ReactNode } from "react";
-import { Draggable, gsap, useGSAP } from "@/lib/gsap";
+import { gsap, useGSAP } from "@/lib/gsap";
+import { Draggable } from "@/lib/gsap-advanced";
 
 type DragSliderProps = {
   children: ReactNode;
