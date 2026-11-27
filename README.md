@@ -7,7 +7,8 @@ Next.js App Router · TypeScript · Tailwind CSS · GSAP · Lenis.
 
 The foundation, responsive Eden Interiors header and home hero are in place:
 tokens, type, motion, the page-load intro, desktop mega menus, the mobile menu,
-and placeholder routes for every menu link. No other home page sections have
+and a route for every menu link. The studio is set in Lagos and the menus and
+project pages are filled with mock projects. No other home page sections have
 been added yet.
 
 ## Getting started
@@ -48,10 +49,11 @@ src/
     ui/                     ButtonLink, CircleArrowLink, ArrowIcon,
                             InstagramIcon
   data/
-    site.ts                 every [bracketed] placeholder + wordmark
+    site.ts                 studio identity, contact details + wordmark
+    projects.ts             the project library: name, type, place, image
     images.ts               every image: src, width, height, alt
     navigation.ts           header / footer / services menus
-    routes.ts               title + copy + onward links per placeholder page
+    routes.ts               title + copy + onward links per route
   lib/
     gsap.ts                 core plugin registration + custom eases
     gsap-advanced.ts        on-demand Flip / Draggable registration
@@ -61,19 +63,28 @@ src/
 
 ## Editing content
 
-- **Studio details** — `src/data/site.ts`. The name and email are Eden
-  Interiors; the hero's requested `[Studio Name]` and the unresolved city,
-  project names and other details remain bracketed placeholders in this file.
+- **Studio details** — `src/data/site.ts`. Everything reads Eden Interiors,
+  Lagos, with a mock phone number, address and social links. The studio name
+  and city are referenced from here across the site, so changing them in this
+  one file updates the header, intro, footer, copy and metadata.
+- **Projects** — `src/data/projects.ts`. Eight mock projects (name, category,
+  location, year, summary and photograph) feed the mega menu, the mobile
+  menu, the project archive and each project's own page. Add one entry and
+  its route is generated automatically.
 - **Photography** — `src/data/images.ts`, each entry with `src`, `width`,
   `height` and `alt`. Drop files in `public/images/` and update the entry.
-  To swap in Unsplash URLs later, replace `src` and add the host to
-  `images.remotePatterns` in `next.config.ts`.
+  The home hero uses `hero-lounge.jpg`.
 - **Navigation** — `src/data/navigation.ts`. The service groups, project
   types, featured projects and studio links are shared by both menus.
-- **Placeholder pages** — `src/data/routes.ts` (one entry per route; the
-  `[...slug]` page is statically generated from it). Project categories and
-  the three featured projects have their own placeholder pages; the featured
-  case-study card points to the first project placeholder.
+- **Inner pages** — `src/data/routes.ts` (one entry per route; the
+  `[...slug]` page is statically generated from it). Project pages show their
+  photograph and details.
+
+## Surfaces
+
+The desktop mega menu and the mobile menu share one espresso surface
+(`--espresso-gradient`), and the header flips to espresso while a desktop
+panel is open so the bar and the panel read as a single dark surface.
 
 ## Design tokens
 

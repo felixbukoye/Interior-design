@@ -1,35 +1,33 @@
 /**
- * The studio's identity, contact details and editorial placeholders.
- * Replace the bracketed values here when the real details are confirmed.
+ * The studio's identity, contact details and editorial content.
+ * Edit this file to change any detail shown across the site.
  */
 export const site = {
   name: "Eden Interiors",
-  studioNamePlaceholder: "[Studio Name]",
   descriptor: "Interior Architecture & Design",
-  city: "[City]",
-  country: "[Country]",
-  founded: "[Year]",
-  projectNames: ["[Project One]", "[Project Two]", "[Project Three]"],
+  city: "Lagos",
+  country: "Nigeria",
+  founded: "2014",
   tagline: "Quiet, considered interiors for the way you actually live.",
   description:
-    "Eden Interiors is an interior design studio in [City] creating calm, enduring homes, hospitality spaces and workplaces.",
-  phone: "[Phone]",
-  phoneHref: "tel:+10000000000",
+    "Eden Interiors is an interior design studio in Lagos creating calm, enduring homes, hospitality spaces and workplaces.",
+  phone: "+234 812 470 6612",
+  phoneHref: "tel:+2348124706612",
   email: "hello@edeninteriors.com",
   emailHref: "mailto:hello@edeninteriors.com",
   address: {
-    line1: "[Street Address]",
-    line2: "[City], [Postcode]",
-    line3: "[Country]",
+    line1: "24 Cooper Road, Ikoyi",
+    line2: "Lagos 101233",
+    line3: "Nigeria",
   },
-  hours: "Studio visits by appointment, [Days]",
+  hours: "Studio visits by appointment, Monday to Friday",
   social: {
-    instagram: "[Instagram URL]",
-    pinterest: "[Pinterest URL]",
+    instagram: "https://www.instagram.com/edeninteriors",
+    pinterest: "https://www.pinterest.com/edeninteriors",
   },
   seo: {
     titleTemplate: "%s — Eden Interiors",
-    defaultTitle: "Eden Interiors — Interior Architecture & Design, [City]",
+    defaultTitle: "Eden Interiors — Interior Architecture & Design, Lagos",
   },
 } as const;
 

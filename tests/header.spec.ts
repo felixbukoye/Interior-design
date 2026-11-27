@@ -1,6 +1,6 @@
 import { expect, test, type Page } from "@playwright/test";
 import {
-  featuredProjects,
+  featuredProjectCards,
   projectTypes,
   serviceGroups,
   studioNav,
@@ -64,6 +64,33 @@ test.describe("server rendering and hydration", () => {
     expect(errors).toEqual([]);
   });
 
+  test("the desktop mega menu uses the same espresso surface as the mobile menu", async ({ page }) => {
+    await page.goto("/");
+    await waitForHeader(page);
+    const panel = page.locator("#mega-menu-services");
+    await page.getByRole("button", { name: "Services", exact: true }).click();
+    await expect(panel).toBeVisible();
+
+    // The mobile menu is the reference: one shared espresso gradient.
+    const palette = await page.evaluate(() => {
+      const read = (element: Element) => {
+        const style = getComputedStyle(element);
+        return { background: style.backgroundImage, color: style.color };
+      };
+      return {
+        panel: read(document.querySelector("#mega-menu-services .mega-panel")!),
+        mobile: read(document.querySelector(".mobile-menu")!),
+        header: getComputedStyle(document.querySelector(".site-header")!).backgroundColor,
+      };
+    });
+    expect(palette.panel.background).toBe(palette.mobile.background);
+    expect(palette.panel.color).toBe("rgb(255, 241, 223)");
+    // The header joins the panel, so the two read as one dark surface.
+    expect(palette.header).toBe("rgb(42, 39, 35)");
+    await expect(panel.locator(".mega-link__title").first()).toHaveCSS("color", "rgb(255, 241, 223)");
+    await expect(panel.locator(".mega-link__description").first()).toHaveCSS("color", "rgba(255, 241, 223, 0.62)");
+  });
+
   test("body attributes added by a browser extension do not break hydration", async ({ page }) => {
     const errors = collectBrowserErrors(page);
     await page.addInitScript(() => {
@@ -81,7 +108,7 @@ test.describe("server rendering and hydration", () => {
       }
     });
 
-    for (const route of ["/", "/services", "/projects/project-one"]) {
+    for (const route of ["/", "/services", "/projects/lekki-residence"]) {
       await page.goto(route);
       await waitForHeader(page);
       await expect(page.locator("body")).toHaveAttribute("data-gr-ext-installed", "");
@@ -108,13 +135,13 @@ test.describe("server rendering and hydration", () => {
     expect(errors).toEqual([]);
   });
 
-  test("every menu destination has a placeholder page", async ({ request }) => {
+  test("every menu destination has a page", async ({ request }) => {
     test.setTimeout(60_000);
     const hrefs = new Set([
       "/", "/services", "/projects", "/journal", "/contact",
       ...serviceGroups.flatMap((group) => group.links.map((link) => link.href)),
       ...projectTypes.map((link) => link.href),
-      ...featuredProjects.map((link) => link.href),
+      ...featuredProjectCards.map((link) => link.href),
       ...studioNav.map((link) => link.href),
     ]);
     for (const href of hrefs) {

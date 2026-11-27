@@ -6,7 +6,7 @@ import Image from "next/image";
 import Link from "next/link";
 import {
   featuredCaseStudy,
-  featuredProjects,
+  featuredProjectCards,
   projectTypes,
   serviceGroups,
   studioNav,
@@ -181,7 +181,7 @@ export function MobileMenu({ open, onNavigate }: MobileMenuProps) {
                 <div className="mobile-menu__group">
                   <p className="mobile-menu__group-label">Featured projects</p>
                   <ul className="mobile-menu__projects">
-                    {featuredProjects.map((project) => (
+                    {featuredProjectCards.map((project) => (
                       <li key={project.href}>
                         <Link href={project.href} onClick={onNavigate}>
                           <span className="mobile-menu__project-image">{loadedGroups.includes("projects") && <Image src={project.image.src} alt={project.image.alt} fill sizes="30vw" />}</span>
